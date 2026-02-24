@@ -52,7 +52,8 @@ class MainActivity : ComponentActivity() {
 
                 TaahsilApp(
                     startDestination = startDest,
-                    isAdmin = sessionManager.getUserRole() == "Admin"
+                    isAdmin = sessionManager.getUserRole() == "Admin",
+                    sessionManager = sessionManager
                 )
             }
         }
@@ -62,7 +63,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TaahsilApp(
     startDestination: String,
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    sessionManager: com.example.taahsil.data.SessionManager
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -76,7 +78,11 @@ fun TaahsilApp(
         Screen.Products.route,
         Screen.Orders.route,
         Screen.Shipments.route,
-        Screen.Payments.route
+        Screen.Payments.route,
+        Screen.Documents.route,
+        Screen.Currency.route,
+        Screen.Analytics.route,
+        Screen.Profile.route
     )
     val showBottomBar = currentRoute in mainRoutes
 
@@ -90,7 +96,8 @@ fun TaahsilApp(
         ) {
             NavGraph(
                 navController = navController,
-                startDestination = startDestination
+                startDestination = startDestination,
+                sessionManager = sessionManager
             )
 
             if (showBottomBar) {

@@ -8,13 +8,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AddShoppingCart
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -33,14 +37,18 @@ import com.example.taahsil.data.local.entity.ProductEntity
 import com.example.taahsil.ui.components.BadgeType
 import com.example.taahsil.ui.components.BentoCard
 import com.example.taahsil.ui.components.StatusBadge
+import com.example.taahsil.ui.orders.CartItem
+import com.example.taahsil.ui.orders.OrderViewModel
 import com.example.taahsil.ui.theme.ElectricBlue
 import com.example.taahsil.ui.theme.BorderLight
+import com.example.taahsil.ui.theme.Emerald
 import com.example.taahsil.ui.theme.GrayText
 
 @Composable
 fun ProductsScreen(
     onProductClick: (ProductEntity) -> Unit = {},
-    viewModel: ProductViewModel = hiltViewModel()
+    viewModel: ProductViewModel = hiltViewModel(),
+    orderViewModel: OrderViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -88,7 +96,20 @@ fun ProductsScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(state.products) { product ->
-                ProductCard(product = product, onClick = { onProductClick(product) })
+                ProductCard(
+                    product = product,
+                    onClick = { onProductClick(product) },
+                    onAddToCart = {
+                        orderViewModel.addToCart(
+                            CartItem(
+                                productId = product.productId,
+                                productName = product.productName,
+                                unitPrice = product.unitPrice,
+                                quantity = 1
+                            )
+                        )
+                    }
+                )
             }
         }
     }
@@ -97,7 +118,8 @@ fun ProductsScreen(
 @Composable
 private fun ProductCard(
     product: ProductEntity,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onAddToCart: () -> Unit
 ) {
     BentoCard(onClick = onClick) {
         Icon(
@@ -138,10 +160,28 @@ private fun ProductCard(
                 )
             }
             Text(
-                text = "$${String.format("%.2f", product.unitPrice)}",
+                text = "₹${String.format("%,.0f", product.unitPrice)}",
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                 color = ElectricBlue
             )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            onClick = onAddToCart,
+            modifier = Modifier.fillMaxWidth().height(36.dp),
+            shape = MaterialTheme.shapes.small,
+            colors = ButtonDefaults.buttonColors(containerColor = Emerald),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp)
+        ) {
+            Icon(
+                Icons.Rounded.AddShoppingCart,
+                contentDescription = null,
+                modifier = Modifier.size(16.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text("Add to Cart", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }

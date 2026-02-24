@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AdminPanelSettings
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Dashboard
 import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Inventory2
@@ -39,7 +40,8 @@ val bottomNavItems = listOf(
     NavItem(Icons.Rounded.Inventory2, "Products", "products"),
     NavItem(Icons.Rounded.Receipt, "Orders", "orders"),
     NavItem(Icons.Rounded.LocalShipping, "Shipments", "shipments"),
-    NavItem(Icons.Rounded.Payments, "Payments", "payments")
+    NavItem(Icons.Rounded.Payments, "Payments", "payments"),
+    NavItem(Icons.Rounded.AccountCircle, "Profile", "profile")
 )
 
 val adminBottomNavItems = listOf(
@@ -47,7 +49,8 @@ val adminBottomNavItems = listOf(
     NavItem(Icons.Rounded.Group, "Users", "user_management"),
     NavItem(Icons.Rounded.Inventory2, "Products", "products"),
     NavItem(Icons.Rounded.Receipt, "Orders", "orders"),
-    NavItem(Icons.Rounded.LocalShipping, "Shipments", "shipments")
+    NavItem(Icons.Rounded.Payments, "Payments", "payments"),
+    NavItem(Icons.Rounded.AccountCircle, "Profile", "profile")
 )
 
 @Composable

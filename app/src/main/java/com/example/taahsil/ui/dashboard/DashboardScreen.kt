@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Analytics
+import androidx.compose.material.icons.rounded.CurrencyExchange
 import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.LocalShipping
 import androidx.compose.material.icons.rounded.Payments
@@ -24,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -42,6 +45,8 @@ fun DashboardScreen(
     onNavigateToPayments: () -> Unit = {},
     onNavigateToOrders: () -> Unit = {},
     onNavigateToProducts: () -> Unit = {},
+    onNavigateToCurrency: () -> Unit = {},
+    onNavigateToAnalytics: () -> Unit = {},
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -143,11 +148,7 @@ fun DashboardScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Pending Payments card
-                BentoCard(
-                    modifier = Modifier.weight(1f),
-                    onClick = onNavigateToPayments
-                ) {
+                BentoCard(modifier = Modifier.weight(1f), onClick = onNavigateToPayments) {
                     MetricContent(
                         icon = Icons.Rounded.Payments,
                         label = "Pending Payments",
@@ -155,17 +156,53 @@ fun DashboardScreen(
                         color = Emerald
                     )
                 }
-
-                // Total Products card
-                BentoCard(
-                    modifier = Modifier.weight(1f),
-                    onClick = onNavigateToProducts
-                ) {
+                BentoCard(modifier = Modifier.weight(1f), onClick = onNavigateToProducts) {
                     MetricContent(
                         icon = Icons.Rounded.Inventory2,
                         label = "Total Products",
                         value = "${state.totalProducts}",
                         color = ElectricBlue
+                    )
+                }
+            }
+        }
+
+        // New feature row: Currency + Analytics
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                BentoCard(modifier = Modifier.weight(1f), onClick = onNavigateToCurrency) {
+                    Icon(
+                        Icons.Rounded.CurrencyExchange,
+                        contentDescription = null,
+                        tint = Color(0xFFF59E0B).copy(alpha = 0.35f),
+                        modifier = Modifier.size(28.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Currency\nConverter", style = MaterialTheme.typography.labelMedium, color = GrayText)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "11 Currencies",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color(0xFFF59E0B)
+                    )
+                }
+                BentoCard(modifier = Modifier.weight(1f), onClick = onNavigateToAnalytics) {
+                    Icon(
+                        Icons.Rounded.Analytics,
+                        contentDescription = null,
+                        tint = Emerald.copy(alpha = 0.35f),
+                        modifier = Modifier.size(28.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Trade\nAnalytics", style = MaterialTheme.typography.labelMedium, color = GrayText)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "↑ 18.4% YoY",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Emerald
                     )
                 }
             }
@@ -208,11 +245,11 @@ fun DashboardScreen(
                         ) {
                             Column {
                                 Text(
-                                    text = "Order #${order.orderId.take(8)}",
+                                    text = "#${order.orderId}",
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                                 Text(
-                                    text = "$${String.format("%.2f", order.totalAmount)}",
+                                    text = "₹${String.format("%,.0f", order.totalAmount)}",
                                     style = MaterialTheme.typography.labelMedium,
                                     color = GrayText
                                 )

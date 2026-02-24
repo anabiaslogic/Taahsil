@@ -25,7 +25,9 @@ object DatabaseModule {
             app,
             AppDatabase::class.java,
             AppDatabase.DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides fun provideUserDao(db: AppDatabase): UserDao = db.userDao

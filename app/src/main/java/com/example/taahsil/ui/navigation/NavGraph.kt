@@ -1,18 +1,24 @@
 package com.example.taahsil.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.taahsil.data.SessionManager
 import com.example.taahsil.ui.admin.AdminDashboardScreen
 import com.example.taahsil.ui.admin.UserManagementScreen
+import com.example.taahsil.ui.analytics.TradeAnalyticsScreen
 import com.example.taahsil.ui.auth.LoginScreen
 import com.example.taahsil.ui.auth.SignupScreen
+import com.example.taahsil.ui.currency.CurrencyConverterScreen
 import com.example.taahsil.ui.dashboard.DashboardScreen
 import com.example.taahsil.ui.documents.DocumentsScreen
+import com.example.taahsil.ui.orders.OrderViewModel
 import com.example.taahsil.ui.orders.OrdersScreen
 import com.example.taahsil.ui.payments.PaymentsScreen
 import com.example.taahsil.ui.products.ProductsScreen
+import com.example.taahsil.ui.profile.ProfileScreen
 import com.example.taahsil.ui.shipments.ShipmentsScreen
 
 sealed class Screen(val route: String) {
@@ -26,13 +32,20 @@ sealed class Screen(val route: String) {
     object Shipments : Screen("shipments")
     object Payments : Screen("payments")
     object Documents : Screen("documents")
+    object Currency : Screen("currency")
+    object Analytics : Screen("analytics")
+    object Profile : Screen("profile")
 }
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String = Screen.Login.route
+    startDestination: String = Screen.Login.route,
+    sessionManager: SessionManager
 ) {
+    // Shared OrderViewModel so cart state persists between Products → Orders
+    val sharedOrderViewModel: OrderViewModel = hiltViewModel()
+
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -76,7 +89,9 @@ fun NavGraph(
                 onNavigateToShipments = { navController.navigate(Screen.Shipments.route) },
                 onNavigateToPayments = { navController.navigate(Screen.Payments.route) },
                 onNavigateToOrders = { navController.navigate(Screen.Orders.route) },
-                onNavigateToProducts = { navController.navigate(Screen.Products.route) }
+                onNavigateToProducts = { navController.navigate(Screen.Products.route) },
+                onNavigateToCurrency = { navController.navigate(Screen.Currency.route) },
+                onNavigateToAnalytics = { navController.navigate(Screen.Analytics.route) }
             )
         }
 
@@ -95,11 +110,14 @@ fun NavGraph(
         }
 
         composable(Screen.Products.route) {
-            ProductsScreen()
+            ProductsScreen(orderViewModel = sharedOrderViewModel)
         }
 
         composable(Screen.Orders.route) {
-            OrdersScreen()
+            OrdersScreen(
+                viewModel = sharedOrderViewModel,
+                onNavigateToProducts = { navController.navigate(Screen.Products.route) }
+            )
         }
 
         composable(Screen.Shipments.route) {
@@ -112,6 +130,25 @@ fun NavGraph(
 
         composable(Screen.Documents.route) {
             DocumentsScreen()
+        }
+
+        composable(Screen.Currency.route) {
+            CurrencyConverterScreen()
+        }
+
+        composable(Screen.Analytics.route) {
+            TradeAnalyticsScreen()
+        }
+
+        composable(Screen.Profile.route) {
+            ProfileScreen(
+                sessionManager = sessionManager,
+                onLogout = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }

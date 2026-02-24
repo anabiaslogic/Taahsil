@@ -83,7 +83,7 @@ fun PaymentsScreen(
                     Text("Pending", style = MaterialTheme.typography.labelMedium, color = GrayText)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "$${String.format("%.2f", state.totalPending)}",
+                        text = "₹${String.format("%,.0f", state.totalPending)}",
                         style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                         color = ElectricBlue
                     )
@@ -101,7 +101,7 @@ fun PaymentsScreen(
                     Text("Paid", style = MaterialTheme.typography.labelMedium, color = GrayText)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "$${String.format("%.2f", state.totalPaid)}",
+                        text = "₹${String.format("%,.0f", state.totalPaid)}",
                         style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                         color = Emerald
                     )
@@ -177,7 +177,7 @@ private fun PaymentCard(payment: PaymentEntity) {
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "$${String.format("%.2f", payment.amount)}",
+                    text = "₹${String.format("%,.0f", payment.amount)}",
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     color = if (payment.paymentStatus == "Paid") Emerald else ElectricBlue
                 )
