@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AdminPanelSettings
 import androidx.compose.material.icons.rounded.Dashboard
+import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material.icons.rounded.LocalShipping
 import androidx.compose.material.icons.rounded.Payments
@@ -40,12 +42,23 @@ val bottomNavItems = listOf(
     NavItem(Icons.Rounded.Payments, "Payments", "payments")
 )
 
+val adminBottomNavItems = listOf(
+    NavItem(Icons.Rounded.AdminPanelSettings, "Admin", "admin_dashboard"),
+    NavItem(Icons.Rounded.Group, "Users", "user_management"),
+    NavItem(Icons.Rounded.Inventory2, "Products", "products"),
+    NavItem(Icons.Rounded.Receipt, "Orders", "orders"),
+    NavItem(Icons.Rounded.LocalShipping, "Shipments", "shipments")
+)
+
 @Composable
 fun GlassBottomBar(
     currentRoute: String,
     onNavigate: (String) -> Unit,
+    isAdmin: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val items = if (isAdmin) adminBottomNavItems else bottomNavItems
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -60,7 +73,7 @@ fun GlassBottomBar(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        bottomNavItems.forEach { item ->
+        items.forEach { item ->
             val isSelected = currentRoute == item.route
             IconButton(
                 onClick = { onNavigate(item.route) }

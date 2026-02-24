@@ -2,6 +2,7 @@ package com.example.taahsil.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.taahsil.data.SessionManager
 import com.example.taahsil.data.local.entity.UserEntity
 import com.example.taahsil.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +16,7 @@ import javax.inject.Inject
 data class AuthState(
     val isLoading: Boolean = false,
     val isLoggedIn: Boolean = false,
+    val userRole: String? = null,
     val error: String? = null,
     val user: UserEntity? = null,
     // Login fields
@@ -30,11 +32,22 @@ data class AuthState(
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
     val state: StateFlow<AuthState> = _state.asStateFlow()
+
+    init {
+        // Check if already logged in
+        if (sessionManager.isLoggedIn()) {
+            _state.value = _state.value.copy(
+                isLoggedIn = true,
+                userRole = sessionManager.getUserRole()
+            )
+        }
+    }
 
     fun onEmailChange(email: String) { _state.value = _state.value.copy(email = email) }
     fun onPasswordChange(pw: String) { _state.value = _state.value.copy(password = pw) }
@@ -49,11 +62,13 @@ class AuthViewModel @Inject constructor(
             _state.value = _state.value.copy(isLoading = true, error = null)
             val result = authRepository.login(_state.value.email, _state.value.password)
             result.fold(
-                onSuccess = { response ->
+                onSuccess = { user ->
+                    sessionManager.saveSession(user.userId, user.role, user.name)
                     _state.value = _state.value.copy(
                         isLoading = false,
                         isLoggedIn = true,
-                        user = response.user
+                        userRole = user.role,
+                        user = user
                     )
                 },
                 onFailure = { e ->
@@ -80,11 +95,13 @@ class AuthViewModel @Inject constructor(
             )
             val result = authRepository.register(user)
             result.fold(
-                onSuccess = { response ->
+                onSuccess = { registeredUser ->
+                    sessionManager.saveSession(registeredUser.userId, registeredUser.role, registeredUser.name)
                     _state.value = _state.value.copy(
                         isLoading = false,
                         isLoggedIn = true,
-                        user = response.user
+                        userRole = registeredUser.role,
+                        user = registeredUser
                     )
                 },
                 onFailure = { e ->
@@ -95,6 +112,11 @@ class AuthViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    fun logout() {
+        sessionManager.clearSession()
+        _state.value = AuthState()
     }
 
     fun clearError() { _state.value = _state.value.copy(error = null) }

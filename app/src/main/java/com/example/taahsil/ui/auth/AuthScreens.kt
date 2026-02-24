@@ -32,6 +32,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,17 +54,20 @@ import com.example.taahsil.ui.theme.ErrorRed
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (String) -> Unit, // Now passes role
     onNavigateToSignup: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     var passwordVisible by remember { mutableStateOf(false) }
 
-    if (state.isLoggedIn) {
-        onLoginSuccess()
-        return
+    LaunchedEffect(state.isLoggedIn, state.userRole) {
+        if (state.isLoggedIn && state.userRole != null) {
+            onLoginSuccess(state.userRole!!)
+        }
     }
+
+    if (state.isLoggedIn) return
 
     Box(
         modifier = Modifier
@@ -191,7 +195,7 @@ fun LoginScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(
-    onSignupSuccess: () -> Unit,
+    onSignupSuccess: (String) -> Unit, // Now passes role
     onNavigateToLogin: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
@@ -200,10 +204,13 @@ fun SignupScreen(
     var roleExpanded by remember { mutableStateOf(false) }
     val roles = listOf("Admin", "Staff", "Customer")
 
-    if (state.isLoggedIn) {
-        onSignupSuccess()
-        return
+    LaunchedEffect(state.isLoggedIn, state.userRole) {
+        if (state.isLoggedIn && state.userRole != null) {
+            onSignupSuccess(state.userRole!!)
+        }
     }
+
+    if (state.isLoggedIn) return
 
     Box(
         modifier = Modifier
