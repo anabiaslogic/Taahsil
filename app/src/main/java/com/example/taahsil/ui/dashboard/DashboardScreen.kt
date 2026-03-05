@@ -38,6 +38,7 @@ import com.example.taahsil.ui.components.StatusBadge
 import com.example.taahsil.ui.theme.ElectricBlue
 import com.example.taahsil.ui.theme.Emerald
 import com.example.taahsil.ui.theme.GrayText
+import com.example.taahsil.ui.theme.WarmRose
 
 @Composable
 fun DashboardScreen(
@@ -177,7 +178,7 @@ fun DashboardScreen(
                     Icon(
                         Icons.Rounded.CurrencyExchange,
                         contentDescription = null,
-                        tint = Color(0xFFF59E0B).copy(alpha = 0.35f),
+                        tint = WarmRose.copy(alpha = 0.35f),
                         modifier = Modifier.size(28.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -186,7 +187,7 @@ fun DashboardScreen(
                     Text(
                         "11 Currencies",
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color(0xFFF59E0B)
+                        color = WarmRose
                     )
                 }
                 BentoCard(modifier = Modifier.weight(1f), onClick = onNavigateToAnalytics) {

@@ -10,41 +10,49 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = DeepNavy,
-    secondary = ElectricBlue,
-    tertiary = Emerald,
+    primary = ElectricBlue,
+    secondary = Emerald,
+    tertiary = WarmRose,
     background = DarkBackground,
     surface = SurfaceDark,
-    onPrimary = OffWhite,
+    onPrimary = Color.White,
     onSecondary = DarkBackground,
     onTertiary = DarkBackground,
-    onBackground = OffWhite,
-    onSurface = OffWhite
+    onBackground = Color.White,
+    onSurface = Color.White,
+    primaryContainer = DeepNavy,
+    surfaceVariant = SurfaceDark,
+    outline = BorderLight.copy(alpha = 0.3f)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = DeepNavy,
-    secondary = ElectricBlue,
-    tertiary = Emerald,
+    primary = ElectricBlue,
+    secondary = Emerald,
+    tertiary = WarmRose,
     background = OffWhite,
-    surface = OffWhite,
-    onPrimary = OffWhite,
-    onSecondary = OffWhite,
-    onTertiary = OffWhite,
-    onBackground = DarkBackground,
-    onSurface = DarkBackground
+    surface = IceWhite,
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1A1C2B),
+    onSurface = Color(0xFF1A1C2B),
+    primaryContainer = LightBlueGlow,
+    secondaryContainer = PinkMist,
+    surfaceVariant = OffWhite,
+    outline = BorderLight
 )
 
 @Composable
 fun TaahsilTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false, // We want to force our Deep Enterprise theme
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

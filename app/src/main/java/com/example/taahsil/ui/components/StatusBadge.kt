@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.example.taahsil.ui.theme.Emerald
 import com.example.taahsil.ui.theme.ElectricBlue
 import com.example.taahsil.ui.theme.ErrorRed
+import com.example.taahsil.ui.theme.WarmRose
 
 enum class BadgeType { SUCCESS, PENDING, ERROR, INFO }
 
@@ -24,10 +25,10 @@ fun StatusBadge(
     modifier: Modifier = Modifier
 ) {
     val (bgColor, textColor) = when (type) {
-        BadgeType.SUCCESS -> Color(0x1A10B981) to Emerald
-        BadgeType.PENDING -> Color(0x1AF59E0B) to Color(0xFFF59E0B)
-        BadgeType.ERROR -> Color(0x1AEF4444) to ErrorRed
-        BadgeType.INFO -> Color(0x1A38BDF8) to ElectricBlue
+        BadgeType.SUCCESS -> Color(0x1AF48FB1) to Emerald
+        BadgeType.PENDING -> Color(0x1AE991A9) to WarmRose
+        BadgeType.ERROR -> Color(0x1AEF5350) to ErrorRed
+        BadgeType.INFO -> Color(0x1A5BB5F0) to ElectricBlue
     }
 
     Box(

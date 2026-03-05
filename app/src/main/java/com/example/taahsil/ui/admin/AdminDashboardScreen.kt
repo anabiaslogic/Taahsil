@@ -40,6 +40,7 @@ import com.example.taahsil.ui.components.StatusBadge
 import com.example.taahsil.ui.theme.ElectricBlue
 import com.example.taahsil.ui.theme.Emerald
 import com.example.taahsil.ui.theme.GrayText
+import com.example.taahsil.ui.theme.WarmRose
 
 @Composable
 fun AdminDashboardScreen(
@@ -147,7 +148,7 @@ fun AdminDashboardScreen(
                         icon = Icons.Rounded.Inventory2,
                         label = "Products",
                         value = "${state.totalProducts}",
-                        color = Color(0xFFF59E0B)
+                        color = WarmRose
                     )
                 }
             }
@@ -172,7 +173,7 @@ fun AdminDashboardScreen(
                         icon = Icons.Rounded.Payments,
                         label = "Pending Payments",
                         value = "${state.pendingPayments}",
-                        color = Color(0xFFF59E0B)
+                        color = WarmRose
                     )
                 }
             }
@@ -204,7 +205,7 @@ fun AdminDashboardScreen(
                         Text(
                             "₹${String.format("%,.2f", state.pendingAmount)}",
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                            color = Color(0xFFF59E0B)
+                            color = WarmRose
                         )
                     }
                 }
